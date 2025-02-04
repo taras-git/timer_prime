@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:timer_prime/bloc/random_number_bloc.dart';
+import 'package:timer_prime/utils.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -22,7 +24,14 @@ class HomePage extends StatelessWidget {
                 );
 
               default:
-                return const Text("well, well, well...");
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(TimeUtils.formattedTime()),
+                    Text(
+                        '${TimeUtils.formattedDate()} kw${TimeUtils.weekNumber()}'),
+                  ],
+                );
             }
           },
         ),

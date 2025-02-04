@@ -39,12 +39,17 @@ class RandomNumberBloc extends Bloc<RandomNumberEvent, RandomNumberState> {
 
       await client.dio.get("api/v1.0/random").then((response) {
         final int fetchedNumber = (response.data as List)[0];
+
         emit(RandomNumberFetched(fetchedNumber: fetchedNumber));
       }).catchError((error) {
-        emit(RandomNumberFailure(errorMessage: error.toString()));
+        emit(
+          RandomNumberFailure(errorMessage: error.toString()),
+        );
       });
     } catch (e) {
-      emit(RandomNumberFailure(errorMessage: e.toString()));
+      emit(
+        RandomNumberFailure(errorMessage: e.toString()),
+      );
     }
   }
 }
