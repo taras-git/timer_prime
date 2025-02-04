@@ -19,10 +19,9 @@ class HomePage extends StatelessWidget {
               case const (RandomNumberFetched):
                 final number = (state as RandomNumberFetched).fetchedNumber;
                 return Center(
-                  child: NumberUtils.isPrime(number)
-                      ? Text('PRIME! $number')
-                      : Text('$number'),
-                );
+                    child: Text(NumberUtils.isPrime(number)
+                        ? 'PRIME $number'
+                        : 'not PRIME $number'));
 
               default:
                 return Column(
