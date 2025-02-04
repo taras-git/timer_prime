@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:timer_prime/bloc/random_number_bloc.dart';
 import 'package:timer_prime/utils.dart';
 
@@ -18,9 +17,11 @@ class HomePage extends StatelessWidget {
               case const (RandomNumberInitial):
                 return const Text("please wait...");
               case const (RandomNumberFetched):
-                final num = (state as RandomNumberFetched).fetchedNumber;
+                final number = (state as RandomNumberFetched).fetchedNumber;
                 return Center(
-                  child: Text('$num'),
+                  child: NumberUtils.isPrime(number)
+                      ? Text('PRIME! $number')
+                      : Text('$number'),
                 );
 
               default:
