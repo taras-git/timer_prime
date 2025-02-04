@@ -21,10 +21,10 @@ class RandomNumberBloc extends Bloc<RandomNumberEvent, RandomNumberState> {
 
     try {
       var client = DioClient();
-      await client.dio.get("api/v1.0/random").then((value) {
-        var number = (value.data as Array);
 
-        emit(RandomNumberFetched());
+      await client.dio.get("api/v1.0/random").then((response) {
+        var fetchedNumber = (response.data as List)[0];
+        emit(RandomNumberFetched(fetchedNumber: fetchedNumber));
       }).catchError((error) {
         emit(RandomNumberFailure(errorMessage: error.toString()));
       });

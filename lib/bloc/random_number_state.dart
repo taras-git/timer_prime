@@ -7,7 +7,13 @@ final class RandomNumberInitial extends RandomNumberState {}
 
 final class RandomNumberFetching extends RandomNumberState {}
 
-final class RandomNumberFetched extends RandomNumberState {}
+final class RandomNumberFetched extends RandomNumberState {
+  final int fetchedNumber;
+
+  RandomNumberFetched({
+    required this.fetchedNumber,
+  });
+}
 
 final class RandomNumberFailure extends RandomNumberState {
   final String errorMessage;
