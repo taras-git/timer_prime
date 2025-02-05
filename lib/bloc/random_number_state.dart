@@ -3,22 +3,22 @@ part of 'random_number_bloc.dart';
 @immutable
 sealed class RandomNumberState {}
 
-final class RandomNumberInitial extends RandomNumberState {}
+final class RandomNumberInitialState extends RandomNumberState {}
 
-final class RandomNumberFetching extends RandomNumberState {}
+final class RandomNumberFetchingState extends RandomNumberState {}
 
-final class RandomNumberFetched extends RandomNumberState {
+final class RandomNumberFetchedState extends RandomNumberState {
   final int fetchedNumber;
 
-  RandomNumberFetched({
+  RandomNumberFetchedState({
     required this.fetchedNumber,
   });
 }
 
-final class RandomNumberFailure extends RandomNumberState {
+final class RandomNumberFailureState extends RandomNumberState {
   final String errorMessage;
 
-  RandomNumberFailure({
+  RandomNumberFailureState({
     required this.errorMessage,
   });
 }

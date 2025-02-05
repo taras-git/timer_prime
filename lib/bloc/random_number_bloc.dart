@@ -11,7 +11,7 @@ class RandomNumberBloc extends Bloc<RandomNumberEvent, RandomNumberState> {
   late final StreamSubscription _periodicSubscription;
   final ApiProvider apiRepository = ApiProvider();
 
-  RandomNumberBloc() : super(RandomNumberInitial()) {
+  RandomNumberBloc() : super(RandomNumberInitialState()) {
     _periodicSubscription = Stream.periodic(
       const Duration(seconds: 2),
     ).listen(
@@ -33,12 +33,14 @@ class RandomNumberBloc extends Bloc<RandomNumberEvent, RandomNumberState> {
     RandomNumberFetchEvent event,
     Emitter<RandomNumberState> emit,
   ) async {
-    emit(RandomNumberFetching());
+    emit(RandomNumberFetchingState());
 
     final fetchedNumber = await apiRepository.fetchRandomNumber();
 
     fetchedNumber != null
-        ? emit(RandomNumberFetched(fetchedNumber: fetchedNumber.randomNumber!))
-        : emit(RandomNumberFailure(errorMessage: fetchedNumber!.errorMessage!));
+        ? emit(RandomNumberFetchedState(
+            fetchedNumber: fetchedNumber.randomNumber!))
+        : emit(RandomNumberFailureState(
+            errorMessage: fetchedNumber!.errorMessage!));
   }
 }
