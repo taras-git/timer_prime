@@ -9,7 +9,8 @@ class RandomPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int? displayedPrimeNumber;
-
+    final stopwatch = Stopwatch();
+    stopwatch.start();
     return Scaffold(
       body: Center(
         child: BlocProvider(
@@ -25,17 +26,26 @@ class RandomPage extends StatelessWidget {
 
                 if (NumberUtils.isPrime(number)) {
                   displayedPrimeNumber = number;
-
-                  return ShowPrimeNumber(primeNumber: displayedPrimeNumber);
+                  stopwatch.reset();
+                  return ShowPrimeNumber(
+                    primeNumber: displayedPrimeNumber,
+                    sw: stopwatch,
+                  );
                 }
 
                 return displayedPrimeNumber == null
                     ? const ShowTime()
-                    : ShowPrimeNumber(primeNumber: displayedPrimeNumber);
+                    : ShowPrimeNumber(
+                        primeNumber: displayedPrimeNumber,
+                        sw: stopwatch,
+                      );
               } else {
                 return displayedPrimeNumber == null
                     ? const ShowTime()
-                    : ShowPrimeNumber(primeNumber: displayedPrimeNumber);
+                    : ShowPrimeNumber(
+                        primeNumber: displayedPrimeNumber,
+                        sw: stopwatch,
+                      );
               }
             },
           ),
@@ -66,15 +76,18 @@ class ShowPrimeNumber extends StatelessWidget {
   const ShowPrimeNumber({
     super.key,
     required this.primeNumber,
+    required this.sw,
   });
 
   final int? primeNumber;
+  final Stopwatch sw;
 
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       const Text('Congrats!'),
       Text('Prime number: $primeNumber'),
+      Text('Seconds: ${sw.elapsedMilliseconds / 1000}'),
     ]);
   }
 }
