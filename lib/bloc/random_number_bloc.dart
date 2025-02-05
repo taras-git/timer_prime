@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:timer_prime/data/api_client.dart';
+import 'package:timer_prime/data/api_provider.dart';
 
 part 'random_number_event.dart';
 part 'random_number_state.dart';
 
 class RandomNumberBloc extends Bloc<RandomNumberEvent, RandomNumberState> {
   late final StreamSubscription _periodicSubscription;
+  final ApiProvider apiRepository = ApiProvider();
 
   RandomNumberBloc() : super(RandomNumberInitial()) {
     _periodicSubscription = Stream.periodic(
@@ -34,22 +35,10 @@ class RandomNumberBloc extends Bloc<RandomNumberEvent, RandomNumberState> {
   ) async {
     emit(RandomNumberFetching());
 
-    try {
-      var client = DioClient();
+    final fetchedNumber = await apiRepository.fetchRandomNumber();
 
-      await client.dio.get("api/v1.0/random").then((response) {
-        final int fetchedNumber = (response.data as List)[0];
-
-        emit(RandomNumberFetched(fetchedNumber: fetchedNumber));
-      }).catchError((error) {
-        emit(
-          RandomNumberFailure(errorMessage: error.toString()),
-        );
-      });
-    } catch (e) {
-      emit(
-        RandomNumberFailure(errorMessage: e.toString()),
-      );
-    }
+    fetchedNumber != null
+        ? emit(RandomNumberFetched(fetchedNumber: fetchedNumber.randomNumber!))
+        : emit(RandomNumberFailure(errorMessage: fetchedNumber!.errorMessage!));
   }
 }
