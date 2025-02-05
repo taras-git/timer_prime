@@ -13,25 +13,28 @@ class HomePage extends StatelessWidget {
         child: BlocBuilder<RandomNumberBloc, RandomNumberState>(
           bloc: RandomNumberBloc()..add(RandomNumberFetchEvent()),
           builder: (context, RandomNumberState state) {
-            switch (state.runtimeType) {
-              case const (RandomNumberInitial):
-                return const Text("please wait...");
-              case const (RandomNumberFetched):
-                final number = (state as RandomNumberFetched).fetchedNumber;
-                return Center(
-                    child: Text(NumberUtils.isPrime(number)
-                        ? 'PRIME $number'
-                        : 'not PRIME $number'));
+            if (state is RandomNumberInitial) {
+              return const Text("please wait...");
+            }
+            if (state is RandomNumberFetched) {
+              final number = state.fetchedNumber;
+              // check if prime
+              // NumberUtils.isPrime(number) ?
 
-              default:
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(TimeUtils.formattedTime()),
-                    Text(
-                        '${TimeUtils.formattedDate()} kw${TimeUtils.weekNumber()}'),
-                  ],
-                );
+              // start timer
+              return Center(
+                  child: Text(NumberUtils.isPrime(number)
+                      ? 'PRIME $number'
+                      : 'not PRIME $number'));
+            } else {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(TimeUtils.formattedTime()),
+                  Text(
+                      '${TimeUtils.formattedDate()} kw${TimeUtils.weekNumber()}'),
+                ],
+              );
             }
           },
         ),
