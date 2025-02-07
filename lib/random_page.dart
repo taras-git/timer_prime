@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:timer_prime/bloc/random_number_bloc.dart';
+import 'package:timer_prime/bloc/random_number_bloc/random_number_bloc.dart';
+import 'package:timer_prime/bloc/ticker_bloc/ticker_bloc.dart';
 import 'package:timer_prime/utils.dart';
 
 class RandomPage extends StatelessWidget {
@@ -13,35 +14,43 @@ class RandomPage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: BlocProvider(
-          create: (context) => RandomNumberBloc(),
-          child: BlocBuilder<RandomNumberBloc, RandomNumberState>(
-            bloc: RandomNumberBloc()..add(RandomNumberFetchEvent()),
-            builder: (context, RandomNumberState state) {
-              if (state is RandomNumberInitialState) {
-                return const Text("please wait...");
-              }
-              if (state is RandomNumberFetchedState) {
-                final number = state.fetchedNumber;
+          create: (context) => TickerBloc()..add(TickerInitialEvent()),
+          child: BlocBuilder<TickerBloc, TickerBaseState>(
+            builder: (context, tickerState) {
+              return BlocProvider(
+                create: (context) => RandomNumberBloc(),
+                child: BlocBuilder<RandomNumberBloc, RandomNumberState>(
+                  bloc: RandomNumberBloc()..add(RandomNumberFetchEvent()),
+                  builder: (context, RandomNumberState rnState) {
+                    if (rnState is RandomNumberInitialState) {
+                      return const Text("please wait...");
+                    }
+                    if (rnState is RandomNumberFetchedState) {
+                      final fetchedNumber = rnState.fetchedNumber;
 
-                if (NumberUtils.isPrime(number)) {
-                  displayedPrimeNumber = number;
+                      if (NumberUtils.isPrime(fetchedNumber)) {
+                        displayedPrimeNumber = fetchedNumber;
+                        context.read<TickerBloc>().add(TickerResetEvent());
 
-                  return ShowPrimeNumber(
-                    primeNumber: displayedPrimeNumber,
-                  );
-                }
-                return displayedPrimeNumber == null
-                    ? const ShowTime()
-                    : ShowPrimeNumber(
-                        primeNumber: displayedPrimeNumber,
-                      );
-              } else {
-                return displayedPrimeNumber == null
-                    ? const ShowTime()
-                    : ShowPrimeNumber(
-                        primeNumber: displayedPrimeNumber,
-                      );
-              }
+                        return ShowPrimeNumber(
+                          primeNumber: displayedPrimeNumber,
+                        );
+                      }
+                      return displayedPrimeNumber == null
+                          ? const ShowTime()
+                          : ShowPrimeNumber(
+                              primeNumber: displayedPrimeNumber,
+                            );
+                    } else {
+                      return displayedPrimeNumber == null
+                          ? const ShowTime()
+                          : ShowPrimeNumber(
+                              primeNumber: displayedPrimeNumber,
+                            );
+                    }
+                  },
+                ),
+              );
             },
           ),
         ),

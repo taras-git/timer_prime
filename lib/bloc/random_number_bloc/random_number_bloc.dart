@@ -8,12 +8,13 @@ part 'random_number_event.dart';
 part 'random_number_state.dart';
 
 class RandomNumberBloc extends Bloc<RandomNumberEvent, RandomNumberState> {
-  late final StreamSubscription _periodicSubscription;
+  late final StreamSubscription _randomNumberPeriodicSubscription;
+
   final ApiProvider apiRepository = ApiProvider();
 
   RandomNumberBloc() : super(RandomNumberInitialState()) {
-    _periodicSubscription = Stream.periodic(
-      const Duration(seconds: 2),
+    _randomNumberPeriodicSubscription = Stream.periodic(
+      const Duration(seconds: 4),
     ).listen(
       (_) {
         add(RandomNumberFetchEvent());
@@ -25,7 +26,7 @@ class RandomNumberBloc extends Bloc<RandomNumberEvent, RandomNumberState> {
 
   @override
   Future<void> close() {
-    _periodicSubscription.cancel();
+    _randomNumberPeriodicSubscription.cancel();
     return super.close();
   }
 
